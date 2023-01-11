@@ -19,15 +19,23 @@ options.add_argument(
 
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
-url = 'https://statusinvest.com.br/acoes/bbas3'
+url = 'https://statusinvest.com.br/acoes/'
 
+ativo = input('Digite o código do ativo: ').lower()
+url+=ativo
+
+print(ativo[:-2])
+
+print(url)
 driver.get(url)
 
 sleep(3)
 
-acao = driver.find_element(By.XPATH, '//*[@id="main-header"]/div[2]/div/div[1]/div/ol/li[3]/a/span')
-pl = driver.find_element(By.XPATH, '//*[@id="indicators-section"]/div[2]/div/div[1]/div/div[4]/div/div/strong')
-cotacao = driver.find_element(By.XPATH, '//*[@id="main-2"]/div[2]/div/div[1]/div/div[1]/div/div[1]/strong')
-dy = driver.find_element(By.XPATH, '//*[@id="main-2"]/div[2]/div/div[1]/div/div[4]/div/div[1]/strong')
+acao = driver.find_element(By.XPATH, '/html/body/main/header/div[2]/div/div[1]/h1')
+pvp = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "P/VP")]/../../div//strong')
+pl = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "P/L")]/../../div//strong')
+cotacao = driver.find_element(By.XPATH, '//h3[contains(text(), "Valor atual")]/../../div//strong')
+dy = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "D.Y")]/../../div//strong')
 
-print(f'{acao.text}\nValor atual: {cotacao.text}\nD.Y%: {dy.text}\nP/L: {pl.text}')
+print(f'{acao.text}\nValor atual: {cotacao.text}\nD.Y%: {dy.text}\nP/VP: {pvp.text}\nP/L: {pl.text}')
+
