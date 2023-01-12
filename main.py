@@ -19,23 +19,33 @@ options.add_argument(
 
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
-url = 'https://statusinvest.com.br/acoes/'
+url_acao = 'https://statusinvest.com.br/acoes/'
+url_fundo = 'https://statusinvest.com.br/fundos-imobiliarios/'
 
-ativo = input('Digite o código do ativo: ').lower()
-url+=ativo
+while True:
+    ativo = input('Digite o código do ativo: ').lower()
+    if ativo == 'sair':
+        break
+    dois_ultimos_digitos = ativo[-2::]
 
-print(ativo[:-2])
+    url = url_fundo + ativo if dois_ultimos_digitos == '11' else url_acao + ativo
 
-print(url)
-driver.get(url)
+    print(url)
+    driver.get(url)
 
-sleep(3)
+    sleep(1)
 
-acao = driver.find_element(By.XPATH, '/html/body/main/header/div[2]/div/div[1]/h1')
-pvp = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "P/VP")]/../../div//strong')
-pl = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "P/L")]/../../div//strong')
-cotacao = driver.find_element(By.XPATH, '//h3[contains(text(), "Valor atual")]/../../div//strong')
-dy = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "D.Y")]/../../div//strong')
-
-print(f'{acao.text}\nValor atual: {cotacao.text}\nD.Y%: {dy.text}\nP/VP: {pvp.text}\nP/L: {pl.text}')
+    if dois_ultimos_digitos != '11':
+        acao = driver.find_element(By.XPATH, '/html/body/main/header/div[2]/div/div[1]/h1')
+        pvp = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "P/VP")]/../../div//strong')
+        pl = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "P/L")]/../../div//strong')
+        cotacao = driver.find_element(By.XPATH, '//h3[contains(text(), "Valor atual")]/../../div//strong')
+        dy = driver.find_element(By.XPATH, '//*[@id="indicators-section"]//h3[contains(text(), "D.Y")]/../../div//strong')
+        
+        print(f'{acao.text}\nValor atual: {cotacao.text}\nD.Y%: {dy.text}\nP/VP: {pvp.text}\nP/L: {pl.text}')
+    else:
+        fundo = driver.find_element(By.XPATH, '//*[@id="main-header"]/div[2]/div/div[1]/h1')
+        dy = driver.find_element(By.XPATH, '//h3[contains(text(), "Dividend Yield")]/../../div//strong')
+        pvp = driver.find_element(By.XPATH, '//h3[contains(text(), "P/VP")]/../../div//strong')
+        print(f'{fundo.text}\nD.Y%: {dy.text}\nP/VP: {pvp.text}')
 
