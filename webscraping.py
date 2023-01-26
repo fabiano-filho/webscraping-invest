@@ -57,9 +57,11 @@ class WebscrapingInvest():
             fundo = self.driver.find_element(By.XPATH, '//*[@id="main-header"]/div[2]/div/div[1]/h1')
             dy = self.driver.find_element(By.XPATH, '//h3[contains(text(), "Dividend Yield")]/../../div//strong')
             pvp = self.driver.find_element(By.XPATH, '//h3[contains(text(), "P/VP")]/../../div//strong')
+            cotacao = self.driver.find_element(By.XPATH, '//h3[contains(text(), "Valor atual")]/../../div//strong')
 
             return {
                 'tipo': 'fii',
+                'cotacao': cotacao.text,
                 'fundo': fundo.text,
                 'dy': dy.text,
                 'pvp': pvp.text
